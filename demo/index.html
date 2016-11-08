@@ -1,16 +1,29 @@
 <!doctype html>
 <html>
   <head>
+    <title>buggie-login demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script>
-      /*
-      window.Polymer = window.Polymer || {};
-      window.Polymer.dom = 'shadow';
-      */
-    </script>
-    <link rel="import" href="buggie-login.html">
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../buggie-login.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
   </head>
   <body>
-    <buggie-login></buggie-login>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic buggie-login Demo</h3>
+      <demo-snippet>
+        <template>
+          <buggie-login></buggie-login>
+        </template>
+      </demo-snippet>
+    </div>
+
   </body>
 </html>
