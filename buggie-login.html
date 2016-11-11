@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../google-signin/google-signin.html">
 
 <!--
@@ -25,12 +26,12 @@ login element for Buggie
       }
       .AreaA{
         display:inline-block;
-        width: 50%;
+        width: 100%;
         margin: 0;
       }
       .AreaA1{
         display:inline-block;
-        width: 40%;
+        width: 35%;
       }
       .sectionA{
         padding-bottom:5%;
@@ -41,33 +42,68 @@ login element for Buggie
       .social{
         padding-top:2%;
       }
+      paper-dialog#logmenu{
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        width: 300px;
+        height: 350px;
+        overflow: auto;
+      }
     </style>
-    <div class="sectionA">
-        <h2>Login</h2>
-          <form is="iron-form" id="form" method="post">
-            <div class="AreaA">
-                <paper-input label="Email" id="emailEnter"></paper-input>
-                <paper-input label="Password" id="passwordEnter" type="password"></paper-input>
-            </div>
-            <div class="AreaA1">
-                <paper-button class="custom" on-click="LoginUser">Enter</paper-button>
-            </div>
-          </form>
-      </div>
-      <div class="sectionB">
-        <h3>Connect using the following</h3>
-        <div class="social">
-          <fb:login-button scope="public_profile,email" size="large"></fb:login-button>
-          <google-signin client-id="752274647587-iumlm4i02sma7ofe7qijtnj77u0v3ogg.apps.googleusercontent.com" scope="https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"></google-signin>
+    
+    <div id="fb-root"></div>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=552045578318647";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <paper-button id="lobutton">Logout</paper-button>
+    <paper-button id="libutton" onclick="logmenu.open()" >Login</paper-button>
+
+    <paper-dialog id="logmenu">
+        <div class="sectionA">
+            <h2>Login</h2>
+            <form is="iron-form" id="form" method="post">
+                <div class="AreaA">
+                    <paper-input label="Email" id="emailEnter"></paper-input>
+                    <paper-input label="Password" id="passwordEnter" type="password"></paper-input>
+                </div>
+                <div class="AreaA1">
+                    <paper-button class="custom" on-click="LoginUser">Enter</paper-button>
+                </div>
+            </form>
         </div>
-      </div>
+        <div class="sectionB">
+            <h3>Connect using the following</h3>
+            <div class="social">
+            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
+            <google-signin client-id="752274647587-iumlm4i02sma7ofe7qijtnj77u0v3ogg.apps.googleusercontent.com" scope="https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"></google-signin>
+            </div>
+        </div>
+    </paper-dialog>
+
   </template>
 
   <script>
     Polymer({
 
       is: 'buggie-login',
-
+      properties: {
+        /**
+        *   This states whether the user is logged in or not so it can show whether the login or logoff button
+        **/
+        activeSession: {
+            type: Boolean,
+            value: false,
+            notify: true
+        }
+      },
       LoginUser: function(){
             // Check what the user entered to login
             var email = this.$.emailEnter.value;
@@ -79,8 +115,9 @@ login element for Buggie
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 // ...
+                console.log(this.activeSession);
             });
-
+            
         },
         LogoutUser: function(){
 
