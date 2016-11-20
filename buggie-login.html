@@ -71,6 +71,7 @@ login element for Buggie
                     <paper-input label="Password" id="passwordEnter" type="password"></paper-input>
                 </div>
                 <div class="AreaA1">
+                    <paper-button class="custom" on-click="SignUpUser">Sign Up</paper-button>
                     <paper-button class="custom" on-click="LoginUser">Enter</paper-button>
                 </div>
             </form>
@@ -99,22 +100,53 @@ login element for Buggie
             notify: true
         }
       },
+      SignUpUser: function(){
+            // Check what the user entered to login
+            var email = this.$.emailEnter.value;
+            var password = this.$.passwordEnter.value
+
+            // Authenticate credentials
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user){
+                // Successful 
+                activeSession = true;  
+            }).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // ...
+                if(errorCode == 'auth/email-already-in-use'){
+                    alert('The email is already in use');
+                }
+
+            });
+            
+        },
       LoginUser: function(){
             // Check what the user entered to login
             var email = this.$.emailEnter.value;
             var password = this.$.passwordEnter.value
 
             // Authenticate credentials
-            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+                // Successful 
+                activeSession = true;  
+            }).catch(function(error) {
                 // Handle Errors here.
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 // ...
+                if(errorCode == 'auth/invalid-email'){
+                    alert('The email is invalid');
+                }
+                else if( errorCode == 'auth/wrong-password'){
+                    alert('The password was wrong.')
+                }
+                activeSession = false;
             });
             
         },
         LogoutUser: function(){
-
+            activeSession = false;
             // Signout a user from Firebase
             firebase.auth().signOut().then(function() {
                 // Successful so logout from other provider
